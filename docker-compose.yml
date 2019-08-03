@@ -1,0 +1,22 @@
+version: '2'
+
+volumes:
+  app:
+
+services:
+  mariadb:
+    image: 'mariadb:5.5'
+    volumes:
+      - ./app/db:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+  web:
+    build: .
+    ports:
+      - '80:80'
+    volumes:
+      - ./app/nextcloud:/var/www/html/
+    environment:
+      - XDEBUG_CONFIG=remote_host=host.docker.internal remote_port=9000 remote_enable=1
+    depends_on:
+      - mariadb
